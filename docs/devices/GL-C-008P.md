@@ -18,9 +18,9 @@ pageClass: device-page
 | Model | GL-C-008P  |
 | Vendor  | [Gledopto](/supported-devices/#v=Gledopto)  |
 | Description | Zigbee LED Controller RGB+CCT (pro) |
-| Exposes | light (state, brightness, color_temp, color_temp_startup, color_xy, color_hs), effect, power_on_behavior, identify, linkquality |
+| Exposes | light (state, brightness, color_temp, color_temp_startup, color_xy, color_hs), effect, power_on_behavior, identify |
 | Picture | ![Gledopto GL-C-008P](https://www.zigbee2mqtt.io/images/devices/GL-C-008P.png) |
-| White-label | Gledopto GL-C-001P, Gledopto GL-C-002P |
+| White-label | Gledopto GL-C-008P_mini, Gledopto GL-C-001P, Gledopto GL-C-002P, Gledopto GL-C-011P, Gledopto GL-C-201P, Gledopto GL-C-202P, Gledopto GL-C-204P, Gledopto GL-C-301P |
 
 
 <!-- Notes BEGIN: You can edit here. Add "## Notes" headline if not already present. -->
@@ -53,7 +53,6 @@ This `GL-C-008P` mode is available as a `modelId` in the following models:
 You can switch to this `GL-C-008P` mode by short pressing the `Opt` button on the device until the Indicator Light is `White`.
 
 To pair with, or change modes on, Zigbee2MQTT, press the `Reset` button 4 times
-
 <!-- Notes END: Do not edit below this line -->
 
 
@@ -109,7 +108,7 @@ The direction of move and step can be either up or down, provide a negative valu
 To do this send a payload like below to `zigbee2mqtt/FRIENDLY_NAME/set`
 
 **NOTE**: brightness move/step will stop at the minimum brightness and won't turn on the light when it's off. In this case use `brightness_move_onoff`/`brightness_step_onoff`
-````js
+```js
 {
   "brightness_move": -40, // Starts moving brightness down at 40 units per second
   "brightness_move": 0, // Stop moving brightness
@@ -144,11 +143,4 @@ Value will **not** be published in the state.
 It's not possible to read (`/get`) this value.
 To write (`/set`) a value publish a message to topic `zigbee2mqtt/FRIENDLY_NAME/set` with payload `{"identify": NEW_VALUE}`.
 The possible values are: `identify`.
-
-### Linkquality (numeric)
-Link quality (signal strength).
-Value can be found in the published state on the `linkquality` property.
-It's not possible to read (`/get`) or write (`/set`) this value.
-The minimal value is `0` and the maximum value is `255`.
-The unit of this value is `lqi`.
 

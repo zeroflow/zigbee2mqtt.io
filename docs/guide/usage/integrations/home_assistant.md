@@ -12,8 +12,14 @@ This allows Zigbee2MQTT to automatically add devices to Home Assistant.
 
 To achieve the best possible integration (including MQTT discovery):
 
--   In your **Zigbee2MQTT** `configuration.yaml` set `homeassistant: true`
--   Enable the [MQTT integration](https://www.home-assistant.io/integrations/mqtt/) in Home Assistant
+- In your **Zigbee2MQTT** `configuration.yaml` set:
+
+    ```yaml
+    homeassistant:
+        enabled: true
+    ```
+
+- Enable the [MQTT integration](https://www.home-assistant.io/integrations/mqtt/) in Home Assistant
 
 ## Device/group page
 
@@ -35,9 +41,9 @@ without having to restart Home Assistant. It also makes it possible to show whic
 
 The device specific configuration allows you to modify the discovery payload. Here you can also prevent a device from being discovered. See [Device specific configuration](../../configuration/devices-groups.html#specific-device-options) for the available options.
 
-## Responding to button clicks
+## Responding to button actions
 
-To respond to button clicks (e.g. WXKG01LM) you can use one of the following three Home Assistant configurations.
+To respond to button actions you can use one of the following Home Assistant configurations.
 
 ### Via MQTT device trigger (recommended)
 
@@ -47,59 +53,59 @@ The [MQTT device triggers](https://www.home-assistant.io/integrations/device_tri
 automation:
     - alias: Respond to button click
       triggers:
-        - trigger: device
-          domain: mqtt
-          device_id: ad44cabee4c646f493814306aa6446e1
-          type: action
-          subtype: arrow_left_click
+          - trigger: device
+            domain: mqtt
+            device_id: ad44cabee4c646f493814306aa6446e1
+            type: action
+            subtype: arrow_left_click
       actions:
-        - action: light.toggle
-          target:
-            entity_id: light.bedroom
+          - action: light.toggle
+            target:
+                entity_id: light.bedroom
 ```
-
-If you only plan to use this (or Home Assistant `event` entities) and want to disable the _Via Home Assistant `sensor` entity_ integration below, set `homeassistant: {legacy_triggers: false}` (see [Configuration](../../configuration/homeassistant.md) for more info).
 
 ### Via Home Assistant `event` entity (experimental)
 
 Note: `event` entity is **experimental** and may **break** in the future.
 
-This method work by responding to the state change of an [`event` entity](https://www.home-assistant.io/integrations/event). The specific event can be targetted via the `event_type` attribute. This will become the recommended method with 2.0.0. Until then, the event types and additional attributes are subject to change and you have to enable `event` entities explicitely by setting `homeassistant: {experimental_event_entities: true}` (see [Configuration](../../configuration/homeassistant.md) for more info).
+This method work by responding to the state change of an [`event` entity](https://www.home-assistant.io/integrations/event). The specific event can be targeted via the `event_type` attribute. Until the implementation becomes finalized, the event types and additional attributes are subject to change and you have to enable `event` entities explicitly by setting `homeassistant: {experimental_event_entities: true}` (see [Configuration](../../configuration/homeassistant.md) for more info).
 
 ```yaml
 automation:
     - alias: Respond to button click
       triggers:
-        - trigger: state
-          entity_id: event.my_switch_click
-          attribute: event_type
-          to: 'single'
+          - trigger: state
+            entity_id: event.my_switch_click
+            to: ~
       conditions:
-        - condition: template
-          value_template: "{{trigger.from_state.state != 'unavailable'}}"
+          - condition: template
+            value_template: "{{trigger.from_state.state != 'unavailable'}}"
+          - condition: template
+            value_template: "{{trigger.to_state.attributes.event_type == 'single'}}"
       actions:
-        - action: light.toggle
-          target:
-            entity_id: light.bedroom
+          - action: light.toggle
+            target:
+                entity_id: light.bedroom
 ```
 
-If you only plan to use this (or MQTT device triggers) and want to disable the _Via Home Assistant entity_ integration below, set `homeassistant: {legacy_triggers: false}` (see [Configuration](../../configuration/homeassistant.md) for more info).
+### Via Home Assistant action sensor (deprecated)
 
-### Via Home Assistant `sensor` entity (deprecated, will be removed in 2.0.0)
+This method works by responding to the state change event of a sensor. For this `homeassistant.legacy_action_sensor: true` needs to be set in your `configuration.yaml`. See the [docs](../../configuration/homeassistant.md) for more info.
 
-This method work by responding to the state change event of a legacy `sensor` entity. These entities will be removed in Zigbee2MQTT 2.x. Please migrate your automations to use `event` entities before then.
+::: warning
+Note that this feature is deprecated and will be removed in the future. It's recommended to use the MQTT device trigger instead.
+:::
 
 ```yaml
 automation:
-    - alias: Respond to button click
-      triggers:
-        - trigger: state
-          entity_id: sensor.my_switch_click
+    - alias: Respond to button action
+      trigger:
+          platform: state
+          entity_id: sensor.my_switch_action
           to: 'single'
-      actions:
-        - action: light.toggle
-          target:
-            entity_id: light.bedroom
+      action:
+          entity_id: light.my_bulb_light
+          service: light.toggle
 ```
 
 ## Groups
@@ -332,7 +338,6 @@ entities:
     - type: divider
     - entity: switch.zigbee2mqtt_bridge_permit_join
     - entity: input_number.zigbee2mqtt_join_minutes
-    - entity: sensor.zigbee2mqtt_bridge_permit_join_timeout
     - type: divider
     - entity: input_select.zigbee2mqtt_old_name_select
     - entity: input_text.zigbee2mqtt_new_name

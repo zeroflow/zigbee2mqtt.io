@@ -18,7 +18,7 @@ pageClass: device-page
 | Model | ZG-204ZM  |
 | Vendor  | [Tuya](/supported-devices/#v=Tuya)  |
 | Description | PIR 24Ghz human presence sensor |
-| Exposes | presence, motion_state, illuminance_lux, battery, fading_time, static_detection_distance, static_detection_sensitivity, indicator, motion_detection_mode, motion_detection_sensitivity, linkquality |
+| Exposes | presence, motion_state, illuminance, battery, fading_time, static_detection_distance, static_detection_sensitivity, indicator, motion_detection_mode, motion_detection_sensitivity |
 | Picture | ![Tuya ZG-204ZM](https://www.zigbee2mqtt.io/images/devices/ZG-204ZM.png) |
 
 
@@ -27,8 +27,7 @@ pageClass: device-page
 
 The manufacturer provides a good [technical in-depth document](https://doc.szalarm.com/zg-205Z/en/) that explains
 what the various settings mean, good default values for those, a recommended method for trimming these values and 
-various other considerations (like installation position) to get good results. 
-
+various other considerations (like installation position) to get good results.
 <!-- Notes END: Do not edit below this line -->
 
 
@@ -36,7 +35,7 @@ various other considerations (like installation position) to get good results.
 ## Options
 *[How to use device type specific configuration](../guide/configuration/devices-groups.md#specific-device-options)*
 
-* `illuminance_lux_calibration`: Calibrates the illuminance_lux value (percentual offset), takes into effect on next report of device. The value must be a number.
+* `illuminance_calibration`: Calibrates the illuminance value (percentual offset), takes into effect on next report of device. The value must be a number.
 
 
 ## Exposes
@@ -53,9 +52,9 @@ Value can be found in the published state on the `motion_state` property.
 It's not possible to read (`/get`) or write (`/set`) this value.
 The possible values are: `none`, `large`, `small`, `static`.
 
-### Illuminance (lux) (numeric)
-Measured illuminance in lux.
-Value can be found in the published state on the `illuminance_lux` property.
+### Illuminance (numeric)
+Measured illuminance.
+Value can be found in the published state on the `illuminance` property.
 It's not possible to read (`/get`) or write (`/set`) this value.
 The unit of this value is `lx`.
 
@@ -111,11 +110,4 @@ It's not possible to read (`/get`) this value.
 To write (`/set`) a value publish a message to topic `zigbee2mqtt/FRIENDLY_NAME/set` with payload `{"motion_detection_sensitivity": NEW_VALUE}`.
 The minimal value is `0` and the maximum value is `10`.
 The unit of this value is `x`.
-
-### Linkquality (numeric)
-Link quality (signal strength).
-Value can be found in the published state on the `linkquality` property.
-It's not possible to read (`/get`) or write (`/set`) this value.
-The minimal value is `0` and the maximum value is `255`.
-The unit of this value is `lqi`.
 
